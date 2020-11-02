@@ -50,13 +50,15 @@ module.exports = {
     if (check_email.length >= 1) {
       const check_password = bcrypt.compareSync(password, check_email[0].password)
       if (check_password) {
-        const { id, name, email, phone, password } = check_email[0]
+        const { id, name, username, email, phone, password, image } = check_email[0]
         let payload = {
           id,
           name,
+          username,
           email,
           phone,
-          password
+          password,
+          image
         }
         const token = jwt.sign(payload, "RAHASIA", { expiresIn: "300h" })
         payload = { ...payload, token }
