@@ -86,6 +86,28 @@ module.exports = {
         }
       })
     })
+  },
+  patchLatLng: (id_user, setData) => {
+    return new Promise((resolve, reject) => {
+      connection.query("UPDATE users SET ? WHERE id = ?", [setData, id_user], (error, result) => {
+        if (!error) {
+          resolve(setData)
+        } else {
+          reject(new Error(error))
+        }
+      })
+    })
+  },
+  getLatLng: (id_user) => {
+    return new Promise((resolve, reject) => {
+      connection.query("SELECT id, name, lat, lng FROM users WHERE id = ?", id_user, (error, result) => {
+        if (!error) {
+          resolve(setData)
+        } else {
+          reject(new Error(error))
+        }
+      })
+    })
   }
 
 }

@@ -11,7 +11,7 @@ module.exports = {
   },
   getInRoomChat: (roomId) => {
     return new Promise((resolve, reject) => {
-      connection.query("SELECT chat_message.id AS id, chat_message.roomchat_id AS roomchat_id, chat_message.id_sender AS id_sender, chat_message.id_receive AS id_receive, chat_message.message AS message, chat_message.created AS created, users.id AS user_id, users.name AS user_name, users.email AS user_email, users.phone AS user_phone, users.image AS user_image FROM chat_message LEFT JOIN users ON users.id = chat_message.id_sender WHERE roomchat_id = ? ORDER BY created", roomId, (error, result) => {
+      connection.query("SELECT chat_message.id AS id, chat_message.roomchat_id AS roomchat_id, chat_message.id_sender AS id_sender, chat_message.id_receive AS id_receive, chat_message.message AS message, chat_message.created AS created, users.id AS user_id, users.name AS user_name, users.email AS user_email, users.phone AS user_phone, users.image AS user_image, users.lat AS user_lat, users.lng AS user_lng FROM chat_message LEFT JOIN users ON users.id = chat_message.id_sender WHERE roomchat_id = ? ORDER BY created", roomId, (error, result) => {
         !error ? resolve(result) : reject(new Error(error))
       })
     })

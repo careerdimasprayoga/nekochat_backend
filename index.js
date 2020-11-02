@@ -4,6 +4,7 @@ const bodyParser = require("body-parser")
 const morgan = require("morgan")
 const cors = require('cors')
 const routerNavigation = require('./src')
+const socket = require('socket.io')
 
 const app = express();
 
@@ -19,10 +20,24 @@ app.use((request, response, next) => {
 app.use("/", routerNavigation)
 app.use(express.static("uploads"))
 
+const http = require('http')
+const server = http.createServer(app)
+const io = socket(server)
+
+
+io.on("connection", (socket) => {
+  console.log("socket.io connect")
+
+  socket.on("globalMessage", (data) => {
+    // console.log(data)
+    io.emit("dataChatMessage", data)
+  })
+})
+
 app.get("*", (request, response) => {
   response.status(404).send("Path not found")
 })
 
-app.listen(process.env.PORT, process.env.IP, () => {
+server.listen(process.env.PORT, process.env.IP, () => {
   console.log(`Express running at host: ${process.env.IP} and port: ${process.env.PORT}`)
 });

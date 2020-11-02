@@ -1,4 +1,4 @@
-const { get_user_Id, m_patch_profile } = require("../../model/users")
+const { get_user_Id, m_patch_profile, patchLatLng, getLatLng } = require("../../model/users")
 const helper = require("../../helper/index")
 
 module.exports = {
@@ -41,7 +41,25 @@ module.exports = {
     } catch (error) {
       return helper.response(response, 400, "Bad Request", error);
     }
+  },
+  patchCordinates: async (request, response) => {
+    try {
+      const { id } = request.params
+      const cordinates = request.body
+      const result = await patchLatLng(id, cordinates)
+      return helper.response(response, 200, "Update cordinates success", result);
+    } catch (error) {
+      return helper.response(response, 400, "Update cordinates error", error);
+    }
+  },
+  getCordinates: async (request, response) => {
+    try {
+      const { id } = request.params
+      const result = await getLatLng(id)
+      return helper.response(response, 200, "Get cordinates success", result);
+    } catch (error) {
+      return helper.response(response, 400, "Get Cordinates Error", error);
+    }
   }
-  // patch_password
 
 }
