@@ -4,7 +4,7 @@ module.exports = {
 
   get_user_search: (key) => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM users WHERE email LIKE "%${key}%" OR phone LIKE "%${key}%"`, (error, result) => {
+      connection.query(`SELECT * FROM users WHERE email = "${key}"`, (error, result) => {
         !error ? resolve(result) : reject(new Error(error))
       });
     })
@@ -19,6 +19,20 @@ module.exports = {
   get_request_friend: (id_user_login) => {
     return new Promise((resolve, reject) => {
       connection.query("SELECT * FROM friends_request WHERE id_user_receive = ? AND status_confirm = 0", id_user_login, (error, result) => {
+        !error ? resolve(result) : reject(new Error(error))
+      })
+    })
+  },
+  postNewFriend: (data) => {
+    return new Promise((resolve, reject) => {
+      connection.query("INSERT INTO chat_message SET ?", data, (error, result) => {
+        !error ? resolve(result) : reject(new Error(error))
+      })
+    })
+  },
+  postFriendList: (data) => {
+    return new Promise((resolve, reject) => {
+      connection.query("INSERT INTO friends_list SET ?", data, (error, result) => {
         !error ? resolve(result) : reject(new Error(error))
       })
     })

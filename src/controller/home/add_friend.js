@@ -1,14 +1,15 @@
-const { get_user_search, get_user_Id, post_add_friend, patch_confirm_request, post_friendlist, get_request_friend } = require("../../model/users")
+const { get_user_search, get_user_Id, postFriendList, post_add_friend, postNewFriend, patch_confirm_request, post_friendlist, get_request_friend } = require("../../model/users")
 const helper = require("../../helper/index")
 
 module.exports = {
 
   search_users: async (request, response) => {
     try {
-      let { key } = request.body
-      const result = await get_user_search(key);
+      let { id } = request.params
+      const result = await get_user_search(id);
       return helper.response(response, 200, "Search friend success", result);
     } catch (error) {
+      console.log(error)
       return helper.response(response, 400, "Bad request", error);
     }
   },
@@ -83,6 +84,46 @@ module.exports = {
       const add_friend_list2 = await post_friendlist(setData2)
       return helper.response(response, 200, "Confirm friend success", add_friend_list1);
     } catch (error) {
+      return helper.response(response, 400, "Bad Request", error);
+    }
+  },
+  addFriendChat: async (request, response) => {
+    try {
+      let { id_sender, id_receive } = request.body
+      const roomchat_id = Math.floor(Math.random() * 10000000)
+      const dataSender = {
+        roomchat_id: roomchat_id,
+        id_sender: id_sender,
+        id_receive: id_receive,
+        message: 'Hi..! I added you to my contact',
+        created: new Date()
+      }
+      const friendListSender = {
+        id_roomchat: roomchat_id,
+        id_user_login: id_sender,
+        id_user_contact: id_receive
+      }
+      await postNewFriend(dataSender)
+      await postFriendList(friendListSender)
+
+      const dataReceive = {
+        roomchat_id: roomchat_id,
+        id_sender: id_receive,
+        id_receive: id_sender,
+        message: 'Hallo...! You automatically become my contact too',
+        created: new Date()
+      }
+      const friendListReceive = {
+        id_roomchat: roomchat_id,
+        id_user_login: id_receive,
+        id_user_contact: id_sender
+      }
+      await postNewFriend(dataReceive)
+      await postFriendList(friendListReceive)
+
+      return helper.response(response, 200, "Confirm friend success");
+    } catch (error) {
+      console.log(error)
       return helper.response(response, 400, "Bad Request", error);
     }
   }
