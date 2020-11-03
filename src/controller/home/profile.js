@@ -18,7 +18,10 @@ module.exports = {
   },
   patch_profile: async (request, response) => { // # Patch
     try {
-      let { id, name, email, phone, image } = request.body
+      console.log(request.body)
+      console.log(request.params)
+      let { id } = request.params
+      let { name, email, phone, image } = request.body
       const id_user = await get_user_Id(id)
       let images = ''
       if (!request.file) {
@@ -29,16 +32,15 @@ module.exports = {
         images = request.file.filename
       }
       const setData = {
-        id: id,
         name: name,
         email: email,
         phone: phone,
         image: images
       }
-      console.log(setData)
       const edit_profile = await m_patch_profile(setData, id)
       return helper.response(response, 200, "Update profile success", edit_profile);
     } catch (error) {
+      console.log(error)
       return helper.response(response, 400, "Bad Request", error);
     }
   },

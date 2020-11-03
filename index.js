@@ -29,9 +29,13 @@ io.on("connection", (socket) => {
   console.log("socket.io connect")
 
   socket.on("globalMessage", (data) => {
-    // console.log(data)
     io.emit("dataChatMessage", data)
-  })
+  }),
+    socket.on("changeRoom", (data) => {
+      console.log(data)
+      socket.leave(data.oldRoom)
+      socket.join(data.newRoom)
+    })
 })
 
 app.get("*", (request, response) => {
